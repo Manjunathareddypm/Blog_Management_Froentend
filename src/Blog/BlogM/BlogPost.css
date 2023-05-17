@@ -1,0 +1,99 @@
+.outline-blog{
+height: 362px;
+
+}
+
+.blog-main1{
+  padding-bottom: 15px;
+}
+
+.outline-blog:hover{
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.3);
+}
+
+
+.descBlogPost{
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-bottom: 0;
+    height:61.6px ;
+    color: #303030;
+    
+}
+
+.blogPostTitle{
+    color: var(--neutral-foreground-rest);
+    fill: currentcolor;
+    display: -webkit-box;
+    outline: 0px;
+    cursor: pointer;
+    overflow: hidden;
+    height: 40px;
+    text-decoration: none;
+    -webkit-line-clamp: var(--heading-max-lines, 2);
+    -webkit-box-orient: vertical;
+    font-size: var(--content-card-heading-font-size, var(--type-ramp-plus-1-font-size));
+    line-height: var(--content-card-heading-line-height, var(--type-ramp-plus-1-line-height)); 
+    font-weight: 600;
+    transition: height 0.3s;
+    --info: ""
+}
+
+
+.blogPostTitle:hover::after {
+  content: var(--info); 
+  position: absolute;
+  bottom: -30px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(255, 255, 255);
+  color: rgb(3, 3, 3);
+  padding: 7px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+
+.cardActionBlogPost{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 0px;
+    margin-bottom: 5px;
+    padding: 8px; 
+  
+    
+}
+
+.commentBlogPost{
+    display: flex;
+    align-items: center;
+}
+
+.cardActionContainer {
+    position: relative;
+    height: 22px; 
+  }
+
+  .authorNameInBlogPost{
+    font-size: 11px;
+    margin-top: 12px;
+    color: #8e8b8b;
+    height: 15px;
+    text-align: right;
+  }
+
+  .inBlogPostEditDelete{
+    display: flex;
+    margin-right: 6px;
+  }
+
+  .date1Blog{
+    margin-right: 5px;
+  }
+
+  

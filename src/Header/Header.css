@@ -1,0 +1,151 @@
+
+.header-main {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    justify-content: space-between;  
+}
+.menu-blogimg-dashboard-buttons{
+    width: 20%;
+    display:flex;
+    flex-Direction:row; 
+    align-Items:center;
+    justify-Content:space-around;
+     /* border: 1px solid black; */
+}
+
+.header-main {
+    display: flex;
+}
+
+.meun-icn {
+    margin-left: 15px;
+}
+
+.img-logo-blog {
+    margin-left: 29px;
+
+}
+
+
+
+.Createbutton-logoutimg{
+    width:20%;
+    display:flex;
+    flex-Direction:row; 
+    align-Items:center;
+    justify-Content:space-around
+}
+
+.account-icon {
+    /* margin-left: 50px; */
+    position: relative;
+}
+
+  .account-icon:hover::after {
+    content: " Logout"; 
+    position: absolute;
+    bottom: -30px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(255, 255, 255);
+    color: rgb(3, 3, 3);
+    padding: 7px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+
+.addIcnBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: orange;
+    height: 35px;
+    width: 140px;
+    font-weight: 500;
+    border-radius: 90px;
+    box-shadow: 1px 2px 2px 1px rgba(73, 73, 73, 0.2);
+    background-color: rgb(254, 255, 255);
+    border: 1px solid rgb(227, 219, 219);
+}
+
+.addIcnBlock:hover {
+    background-color: blue;
+}
+
+@media (max-width: 1000px) {
+    .header-main {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    justify-content: space-between;
+    }
+    .menu-blogimg-dashboard-buttons{
+        width: 30%;
+        display:flex;
+        flex-Direction:row; 
+        align-Items:center;
+        justify-Content:space-around;
+         /* border: 1px solid black; */
+    }
+  
+    .meun-icn {
+      margin-left: 10px;
+    }
+  
+    .img-logo-blog {
+      margin-left: 15px;
+    }
+  
+    .Createbutton-logoutimg{
+        width: 30%;
+        display:flex;
+        flex-Direction:row; 
+        align-Items:center;
+         justify-Content:space-around;
+         /* border: 1px solid black; */
+        }
+  }
+
+  @media (max-width: 768px) {
+    .header-main {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    justify-content: space-between;
+    }
+    .menu-blogimg-dashboard-buttons{
+        width: 50%;
+        display:flex;
+        flex-Direction:row; 
+        align-Items:center;
+        justify-Content:space-around;
+         /* border: 1px solid black; */
+    }
+  
+    .meun-icn {
+      margin-left: 10px;
+    }
+  
+    .img-logo-blog {
+      margin-left: 15px;
+    }
+  
+    .Createbutton-logoutimg{
+        width: 45%;
+        display:flex;
+        flex-Direction:row; 
+        align-Items:center;
+         justify-Content:space-around;
+         /* border: 1px solid black; */
+        }
+        .account-icon {
+            margin-left: 5px;
+            position: relative;
+        }
+  }
