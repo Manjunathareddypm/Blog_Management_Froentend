@@ -40,22 +40,11 @@ height: 362px;
     line-height: var(--content-card-heading-line-height, var(--type-ramp-plus-1-line-height)); 
     font-weight: 600;
     transition: height 0.3s;
-    --info: ""
+   
 }
 
 
-.blogPostTitle:hover::after {
-  content: var(--info); 
-  position: absolute;
-  bottom: -30px; 
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgb(255, 255, 255);
-  color: rgb(3, 3, 3);
-  padding: 7px;
-  border-radius: 5px;
-  font-size: 14px;
-}
+
 
 
 .cardActionBlogPost{
@@ -65,8 +54,7 @@ height: 362px;
     height: 0px;
     margin-bottom: 5px;
     padding: 8px; 
-  
-    
+
 }
 
 .commentBlogPost{
@@ -75,6 +63,7 @@ height: 362px;
 }
 
 .cardActionContainer {
+  display: flex;
     position: relative;
     height: 22px; 
   }

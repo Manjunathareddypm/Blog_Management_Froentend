@@ -5,8 +5,6 @@ import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTypeOfBlogInDashBoard } from '../redux/Slice/HomeDashboardSlice';
-import { selectTypeOfBlog } from '../redux/Slice/HomeDashboardSlice';
 import { setrelevanceType } from '../redux/Slice/HomeDashboardSlice';
 export default function NativeSelectDemo1(props) {
   const [value, setValue] = useState("All");

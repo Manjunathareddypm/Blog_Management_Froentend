@@ -1,5 +1,19 @@
 .mainBody{
-    background-color: #8739F9;
-   
-    
+    background-Image:"linear-gradient(to right, #08CCFD, #0379FD)";
+}
+
+.typeInViewBlog{
+    display: flex;
+    text-transform: uppercase;
+    justify-content: center;
+    align-items: center;
+    background-color: #edf1f7;
+    font-size: 16px;
+    font-weight: 600;
+    border: 1px solid rgb(233, 230, 230);
+    padding: 8px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    margin-right: 767px;
 }

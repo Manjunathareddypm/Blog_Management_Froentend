@@ -2,30 +2,25 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./CreateBlog.css";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
-import image from "../../assest/logo_blogger_40px_2x.png";
 import { createPostService } from "../../Services/blogs.service";
 import SelectSmall from "../../Utils/tab";
 import { useNavigate } from "react-router-dom";
-import { Author } from "../../Pages/LoginPage/Login";
 import Header from "../../Header/Header";
-import axios from "axios";
 import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { selectTypeOfBlog } from "../../redux/Slice/HomeDashboardSlice";
-import { Container, Input } from "@mui/material";
-import img from "../../assest/blog-image1.jpg"
+import img from "../../assest/otherOption.jpg"
+import { setIsPublishValue } from "../../redux/Slice/HomeDashboardSlice";
 
 export default function CreateBlog(id) {
   const [imageUrl, setImageUrl] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const propValue = "Create";
-  const titleregex = /^.{3,}$/;
-  const descRegex = /^[\s\S]{3,}$/
+  const titleregex = /^.{10,}$/;
+  const descRegex = /^[\s\S]{10,}$/
   const [blog, setBlog] = useState({
     Title: "",
     Description: "",
@@ -38,6 +33,10 @@ export default function CreateBlog(id) {
     titleHelper: "",
     descriptionHelper: "",
   });
+
+  const valueOfIsPublish = useSelector((c)=>{
+    return c.allBlogReducer.isPublish
+  })
 
   const valueOfType = useSelector((c) => {
     return c.allBlogReducer.typeOfBlog;
@@ -69,7 +68,6 @@ export default function CreateBlog(id) {
   const onClickPublish = async () => {
     const titleTest = titleregex.test(blog.Title);
     const desTest = descRegex.test(blog.Description);
-
     if (titleTest) {
       setRegex((prev) => ({
         ...prev,
@@ -80,7 +78,7 @@ export default function CreateBlog(id) {
       setRegex((prev) => ({
         ...prev,
         titleError: true,
-        titleHelper: "Blog title must contain at least 3 letters.",
+        titleHelper: "Blog title must contain at least 10 letters.",
       }));
     }
 
@@ -94,11 +92,11 @@ export default function CreateBlog(id) {
       setRegex((prev) => ({
         ...prev,
         descriptionError: true,
-        descriptionHelper: "Blog description must contain at least 3 letters.",
+        descriptionHelper: "Blog description must contain at least 10 letters.",
       }));
     }
-    if (imageUrl) {
-
+    if (imageUrl && desTest && titleTest) {
+      await dispatch(setIsPublishValue(true))
       const time = Date.now();
       const imageRef = ref(storage, `images/blogs/${time}`);
       uploadBytes(imageRef, imageUrl)
@@ -106,33 +104,27 @@ export default function CreateBlog(id) {
         .then((err) => {
           const dbCall = async () => {
             const response = await createPostService(blog, err);
+            dispatch(setIsPublishValue(false))
             if (response) {
-              navigate("/createPostEmoji")
+              navigate(`/createPostEmoji/${response.data.data._id}`)
             }
           };
           dbCall();
         });
-    } else {
-
+    } else if (desTest && titleTest) {
       const response = await createPostService(blog);
+      dispatch(setIsPublishValue(false))
       if (response) {
-        navigate("/createPostEmoji")
+        navigate(`/createPostEmoji/${response.data.data._id}`)
       }
     }
 
   }
 
-
   const handlePhoto = (e) => {
     setImageUrl(e.target.files[0]);
   };
-  useEffect(() => {
 
-    return () => {
-      dispatch(selectTypeOfBlog("All"))
-    }
-
-  }, [])
   useEffect(() => {
     if (imageUrl) {
       const time = Date.now();
@@ -148,8 +140,6 @@ export default function CreateBlog(id) {
   return (
     <>
       <Header propValue={propValue} />
-      {/* <Container> */}
-
       <div className="createblog-ui-main">
         <div style={{ width: '70vw' }} >
           <div style={{ height: '20%', width: '100%', paddingTop: '2rem' }}>
@@ -169,9 +159,10 @@ export default function CreateBlog(id) {
                   marginLeft: "0px",
                   width: "156px",
                 }}
+                disabled={valueOfIsPublish}
                 endIcon={<SendIcon />}
               >
-                Publish
+                {valueOfIsPublish ? 'Publishing...' : 'Publish'}
               </Button>
             </div>
           </div>
@@ -217,7 +208,6 @@ export default function CreateBlog(id) {
               <TextField
                 placeholder="Write your story..."
                 multiline
-                maxRows={4}
                 variant="standard"
                 required
                 value={blog.Description}
@@ -228,7 +218,7 @@ export default function CreateBlog(id) {
                 style={{ height: '10rem', width: '100%', marginTop: "2rem", border: 'none', outline: 'none', boxShadow: 'none' }}
                 InputProps={{
                   style: {
-                    outline: "none", // Remove the outline
+                    outline: "none",
                   },
                 }}
               />
@@ -238,15 +228,8 @@ export default function CreateBlog(id) {
         </div>
 
 
-
-        <div className="rgt-lowerpart">
-          <div className="button-rgt-part">
-
-
-          </div>
-        </div>
       </div>
-      {/* </Container> */}
+
     </>
   );
 }

@@ -4,12 +4,8 @@ import {
   TextField,
   Button,
   Typography,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-
 } from "@mui/material";
+import { toaster } from "../../Utils/Toaster";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import backgroundImage from "../../assest/backround-image.png";
@@ -17,13 +13,11 @@ import styled from "@emotion/styled";
 import { signedup } from "../../Services/blogs.service";
 import { signedin } from "../../Services/blogs.service";
 import { useDispatch } from "react-redux";
-import { setAuthorName } from "../../redux/Slice/HomeDashboardSlice";
-import { addTokenToSystem, setAuthenticated } from "../../redux/Slice/Authentications";
+import {setAuthenticated } from "../../redux/Slice/Authentications";
 export let Author
 const fullnameRegex = /^[A-Z]{1}[a-z ]{1,}[ ]{1}[A-Z]{1}[a-z ]{2,}$/;
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const passwordRegex = /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/
-
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
 const Component = styled(Box)`
   width: 400px;
   margin: auto ;
@@ -47,7 +41,7 @@ const Wrapper = styled(Box)`
   & > div,
   & > button,
   & > p {
-    margin-top: 20px;
+    margin-top: 20px;  
   }
 `;
 
@@ -70,14 +64,13 @@ function Login() {
 
   const imageURL = "https://www.sesta.it/wp-content/uploads/2021/03/logo-blog-sesta-trasparente.png";
   const [account, toggleAccount] = useState("login");
-  const [selectuser, setselectuser] = React.useState("");
+  // const [selectuser, setselectuser] = React.useState("");
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  // const navigate = useNavigate()
 
-  const handleChange = (event) => {
-    setselectuser(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setselectuser(event.target.value);
+  // };
   const toggleSignup = () => {
     account === "signup" ? toggleAccount("login") : toggleAccount("signup");
   };
@@ -100,6 +93,15 @@ function Login() {
     passwordError: false,
     passwordHelper: "",
   });
+
+
+  const [errorObjSignIn, setErrorObjSignIn] = React.useState({
+    emailSigninError: false,
+    emailSigninHelper: "",
+    passwordSigninError: false,
+    passwordSigninHelper: "",
+  });
+
   const takefullname = (fname) => {
     setSigupObj((prevState) => ({
       ...prevState,
@@ -122,51 +124,24 @@ function Login() {
     setSiginObj((prevState) => ({ ...prevState, password: e.target.value }));
   };
   const submit = async () => {
-    let emailTest = emailRegex.test(signinObj.email);
-    let passwordTest = passwordRegex.test(signinObj.password);
-
-    if (emailTest === false) {
-      setErrorObj((prevState) => ({
-        ...prevState,
-        emailError: true,
-        emailHelper: "Enter valid email",
-      }));
-    } else {
-      setErrorObj((prevState) => ({
-        ...prevState,
-        emailError: false,
-        emailHelper: "",
-      }));
-    }
-    if (passwordTest === false) {
-      setErrorObj((prevState) => ({
-        ...prevState,
-        passwordError: true,
-        passwordHelper: "Enter valid password",
-      }));
-    } else {
-      setErrorObj((prevState) => ({
-        ...prevState,
-        passwordError: false,
-        passwordHelper: "",
-      }));
-    }
-    
-      let response = await signedin(signinObj);
-      if (response.data.code == 200) {
-        window.location.reload()
-        await localStorage.setItem('token', response.data.data)
-        await localStorage.setItem('author', signinObj.email)
-        dispatch(setAuthorName(signinObj.email))
-        dispatch(addTokenToSystem(response.data.data))
+    let response
+    try {
+      response = await signedin(signinObj);
+      if (response) {
+         window.location.reload()
+         localStorage.setItem('token', response.data.data)
+         localStorage.setItem('author', signinObj.email)
         dispatch(setAuthenticated(true))
       }
-    
+
+    } catch (e) {
+      toaster("error", e.response.data.message);
+    }
+
   };
 
   const submitforsignup = async () => {
     let fullnameTest = fullnameRegex.test(signupObj.fullName);
-    console.log(fullnameTest, "Test");
     let emailTest = emailRegex.test(signupObj.email);
     let passwordTest = passwordRegex.test(signupObj.password);
 
@@ -201,7 +176,7 @@ function Login() {
       setErrorObj((prevState) => ({
         ...prevState,
         passwordError: true,
-        passwordHelper: "enter password having at least one small,cap,special character,amd number with range 8-16",
+        passwordHelper: "enter password having at least one small,cap,special character,and number with range 8-12",
       }));
     } else {
       setErrorObj((prevState) => ({
@@ -210,11 +185,23 @@ function Login() {
         passwordHelper: "",
       }));
     }
+  
     if (fullnameTest === true && emailTest === true && passwordTest === true) {
-
-      let response = await signedup(signupObj);
-      if (response) {
-        toggleSignup()
+      let response
+      try {
+        response = await signedup(signupObj);
+        if (response) {
+          toaster("info", response.data.message)
+          toggleSignup()
+        }
+      } catch (error) {
+        if (error.response.data.message) {
+          setErrorObj((prevState) => ({
+            ...prevState,
+            emailError: true,
+            emailHelper: error.response.data.message,
+          }));
+        }
       }
 
     }
@@ -223,9 +210,8 @@ function Login() {
     <div
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        display:"flex",
-
-        alignItems:"center",
+        display: "flex",
+        alignItems: "center",
         width: "100vw",
         height: "100vh",
         position: "fixed",
@@ -240,16 +226,16 @@ function Login() {
               label="Enter your mail id"
               variant="standard"
               onChange={takeEmail}
-              error={errorObj.emailError}
-              helperText={errorObj.emailHelper}
+              error={errorObjSignIn.emailError}
+              helperText={errorObjSignIn.emailHelper}
             />
             <TextField
               label="Enter your password"
               variant="standard"
               onChange={takePassword}
               type='password'
-              error={errorObj.passwordError}
-              helperText={errorObj.passwordHelper}
+              error={errorObjSignIn.passwordError}
+              helperText={errorObjSignIn.passwordHelper}
             />
             <LoginButton variant="contained" onClick={submit}>
               Login
@@ -261,8 +247,6 @@ function Login() {
           </Wrapper>
         ) : (
           <Wrapper>
-          
-
             <TextField
               label="Enter your fullname"
               variant="standard"
@@ -285,7 +269,7 @@ function Login() {
               helperText={errorObj.passwordHelper}
             />
             <SignupButton onClick={submitforsignup} >Signup</SignupButton>
-            <Typography style={{marginLeft:'150px'}}>OR</Typography>
+            <Typography style={{ marginLeft: '150px' }}>OR</Typography>
             <LoginButton variant="contained" onClick={toggleSignup}>
               Already have an account
             </LoginButton>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./ViewBlog.css";
-// import { Box, Button, TextField, CardContent } from "@mui/material";
 import { deleteBlogsService } from "../../Services/blogs.service";
 import CommentIcon from '@mui/icons-material/Comment';
 import Header from "../../Header/Header";
@@ -11,15 +10,11 @@ import Typography from "@mui/material/Typography";
 import { useNavigate, useParams } from "react-router-dom";
 import { sendTypeImage } from "../../Utils/ImageSelectionByType";
 import { getPostByIdService } from "../../Services/blogs.service";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Card from "@mui/material/Card";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { Button, CardActionArea, CardActions } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import DateDisplay from "../../Utils/DateDisplay";
 import { DeleteForever, Share } from "@mui/icons-material";
 import { Edit } from "@mui/icons-material";
@@ -27,20 +22,17 @@ import { Link } from 'react-router-dom';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { likeButtonService } from "../../Services/blogs.service";
 import { findAllComments } from "../../Services/blogs.service";
-import { collectAllReplies } from "../../Services/blogs.service";
-import { getIndividualReplyNumber } from "../../Services/blogs.service";
 import { getReplyToNumber } from "../../Services/blogs.service";
-import iamge from '../../assest/blog12.jpg'
+import { toaster } from "../../Utils/Toaster";
+import { ToastContainer } from "react-toastify";
+
 function ViewBlog(props) {
   const [data1, setData1] = useState();
   const [isLiked, setIsLiked] = useState()
   const fetch = async () => {
     const data = await getPostByIdService(id);
-    const data1 = await getIndividualReplyNumber(id)
-    // console.log("data1 ", data1.data.data);
     const data2 = await getReplyToNumber(id)
-    // console.log("DATAE@2",data2.data.data.length);
-    // console.log("Data2", data2.data.data);
+
     await setData1(data.data.data[0]);
     setObj((prev) => ({
       ...prev,
@@ -54,7 +46,7 @@ function ViewBlog(props) {
       Type: data.data.data[0].Type,
       numberOfLikes: data.data.data[0].Likes.length,
       numberOfReplies: data2.data.data.length,
-      imageData :data.data.data[0].data
+      imageData: data.data.data[0].data
     }));
   };
   const dataprops = async () => {
@@ -62,13 +54,12 @@ function ViewBlog(props) {
     return data
   }
 
-  const { idParams } = useParams()
   const authorName = localStorage.getItem('author')
   const navigate = useNavigate()
   const onClickDeleteIcon = async () => {
     const data = await deleteBlogsService(obj.underId)
-    console.log(data);
     navigate("/dashboard")
+    toaster("error", data.data.message)
   }
 
   const [obj, setObj] = useState({
@@ -83,32 +74,20 @@ function ViewBlog(props) {
     numberOfLikes: 0,
     numberOfComment: 0,
     numberOfReplies: 0,
-    imageData:null
+    imageData: null
   });
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const { id } = useParams();
   const initialValueForComments = async () => {
     const data = await findAllComments(id)
     setObj((prev) => ({
       ...prev, numberOfComment: data.data.data.length
     }))
-    // console.log(data.data.data.length, "SDDDD");
+
   }
-
-
-
 
   const likeButton = async () => {
     const data = await likeButtonService(id, authorName)
-    // console.log("DARARATAF....", data);
     if (data.data.data.Likes.includes(authorName)) {
       setIsLiked(true)
       setObj((prev) => ({
@@ -119,7 +98,6 @@ function ViewBlog(props) {
       setObj((prev) => ({
         ...prev, numberOfLikes: obj.numberOfLikes - 1
       }))
-
     }
     fetch()
   }
@@ -127,7 +105,7 @@ function ViewBlog(props) {
   const seeComments = () => {
     setVisible(!visible)
   }
-  
+
   const checkInitialStateOfLike = async () => {
     const data = await getPostByIdService(id)
 
@@ -139,12 +117,11 @@ function ViewBlog(props) {
 
 
   useEffect(() => {
-
     fetch()
     initialValueForComments()
     checkInitialStateOfLike()
-
   }, []);
+
   return (
     <div style={{ marginBottom: '0px' }}>
       <Header />
@@ -152,11 +129,10 @@ function ViewBlog(props) {
         <Card sx={{ maxWidth: 1000, margin: "auto" }}>
           <CardActionArea>
             <CardMedia
-            style={{ width: '100%', height: 'auto'}}
+              style={{ width: '100%', height: 'auto' }}
               component="img"
               height="400"
-              
-              src={obj.imageData?obj.imageData:require('../../assest/ad123.png')}
+              src={obj.imageData ? obj.imageData : require('../../assest/ad123.png')}
               alt="green iguana"
             />
             <CardContent>
@@ -169,25 +145,33 @@ function ViewBlog(props) {
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "flex-end",
                   alignItems: "center",
                 }}
+                className="editDeleteInViewBlog"
               >
-                <div className="con-par2" style={{ marginLeft: "23px" }}>
-                  {" "}
-                  <VisibilityIcon style={{ marginRight: "5px" }} />
-                  {obj.Views}
+                 {authorName == obj.Author ?   
+                  <div  className="typeInViewBlog">
+                  {obj.Type}
+                </div> :  <div  className="typeInViewBlog" style={{marginBottom:'10px'}}>
+                  {obj.Type}
                 </div>
+                }
+               {authorName == obj.Author?
+                <div className="con-par2" >
+                <VisibilityIcon style={{ marginRight: "5px", marginTop:'7px' }} />
+                <div style={{marginTop:'7px'}}>
+                {obj.Views}
+                </div>
+              </div>:
+               <div className="con-par2" style={{marginLeft:'43px'}}>
+                <VisibilityIcon style={{ marginRight: "5px" , marginTop:'7px'}} />
+                <div style={{marginTop:'7px'}}>
+                {obj.Views}
+                </div>
+              </div>
+               }               
                 <div>
-                  <IconButton
-                    aria-label="more"
-                    id="long-button"
-                    aria-controls={open ? "long-menu" : undefined}
-                    aria-expanded={open ? "true" : undefined}
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    {authorName == obj.Author ? <div style={{ display: 'flex' }}>
+                {authorName == obj.Author ? <div style={{ display: 'flex' }}>
                       <div > <DeleteForever onClick={onClickDeleteIcon} className='deleteBtnclass' /></div>
                       <Link to={`/editBlog/${obj.underId}`}>
                         <div>
@@ -195,8 +179,6 @@ function ViewBlog(props) {
                         </div>
                       </Link>
                     </div> : null}
-                  </IconButton>
-
                 </div>
               </div>
 
@@ -211,13 +193,8 @@ function ViewBlog(props) {
               flexDirection: "column",
               alignItems: "flex-start",
             }}
-          ><div style={{ marginLeft: "10px", marginBottom: '10px' }}>
-              <Button
-                variant="contained"
-                style={{ backgroundColor: "#873F1", height: '30px' }}
-              >
-                {obj.Type}
-              </Button>
+          >
+            <div style={{ marginLeft: "10px", marginBottom: '10px' }}>           
             </div>
             <div style={{ marginLeft: "10px" }}>
               <Button onClick={likeButton}
@@ -226,35 +203,28 @@ function ViewBlog(props) {
               >
 
                 {isLiked ? <FavoriteIcon style={{ fontSize: '25px', color: 'red', fontWeight: 900, cursor: 'pointer' }} /> :
-
                   <FavoriteBorderIcon style={{ fontSize: '23px', cursor: 'pointer' }} />
                 }<div style={{ marginLeft: '3px', marginRight: '3px' }}>
                   {obj.numberOfLikes}
                 </div>
-
                 Likes
               </Button>
+              <ToastContainer />
             </div>
             <div style={{ paddingTop: "10px" }}>
               <Button onClick={seeComments} style={{ height: '31px' }} variant="contained"><CommentIcon style={{ marginTop: '3px', fontSize: '22px' }} /><p style={{ marginRight: '5px', marginLeft: '3px' }}>{obj.numberOfComment + obj.numberOfReplies}</p>Comment</Button>
-
-
             </div>
             <div style={{ marginTop: '10px', display: 'flex' }}>
               <App id={obj.underId} valueOfType={"viewblog"} />
               <div style={{ marginLeft: '49rem' }}>
                 <DateDisplay date={obj.createdAt} />
               </div>
-
-
             </div>
           </CardActions>
         </Card>
         {visible && <Comments initialValueForComments={initialValueForComments} post={dataprops} postAuthor={obj.Author} id={obj.underId} fetch={fetch} Title={obj.Title} />}
       </div>
-
     </div>
-
   );
 }
 

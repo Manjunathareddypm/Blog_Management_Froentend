@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { findMyPost } from '../Services/blogs.service'
 import Header from '../Header/Header'
 import Blog from '../Blog/BlogModel/Blog'
-import { Card } from '@mui/material'
 import { useSelector } from 'react-redux'
 import './Posts.css'
 function Mypost() {
@@ -13,7 +12,6 @@ function Mypost() {
     const fetchForMyPost = async () => {
         const data = await findMyPost(author)
         setData(data.data.data)
-
     }
     useEffect(() => {
         fetchForMyPost()
@@ -25,8 +23,6 @@ function Mypost() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-               
-
             }}>
                 {
                     data1.map((x) => (
@@ -48,9 +44,7 @@ function Mypost() {
                                 imageData = {x.data}
                             />
                         </div>
-
                     ))
-
                 }
             </div>
         </>

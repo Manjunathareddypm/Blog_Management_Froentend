@@ -1,14 +1,11 @@
 
 .Sam {
     width: 30px;
-    height: 50px;
-    
+    height: 50px;   
 }
 
 .home-dash {
-    
      margin-left: 10vw;
-    /* background-image: url('../../assest/pexels-photo-7135066.jpeg'); */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -23,11 +20,24 @@
     background-position: center center;
     width: 80vw;
     height: 100%;
-
 }
+
 .dashBoardhome{
     background-color: #f3f3f3;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
 }
+
+.dashboard-img-blogs{
+    display: flex;
+    margin-left: 100px;
+}
+
+@media (max-width: 1000px) {
+    .dashboard-img-blogs{
+        display: flex;
+       justify-content: center;
+       margin: auto;
+    }
+  }

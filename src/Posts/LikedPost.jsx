@@ -1,9 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { findLikedPost, findMyPost } from '../Services/blogs.service'
+import { findLikedPost } from '../Services/blogs.service'
 import Header from '../Header/Header'
 import Blog from '../Blog/BlogModel/Blog'
-import { Card } from '@mui/material'
 import { useSelector } from 'react-redux'
 function LikedPost() {
     const author = useSelector((c) => {
@@ -12,25 +11,21 @@ function LikedPost() {
     const [data1, setData] = useState([])
     const fetch = async () => {
         const data = await findLikedPost(author)
-    
         setData(data.data.data)
-
     }
+
     useEffect(() => {
         fetch()
     }, [])
     return (
         <>
-
             <Header />
-
             <div className='postCss' style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
                 {
-
                     data1.map((x) => (
                         <div key={x._id}>
                             <Blog
@@ -47,17 +42,12 @@ function LikedPost() {
                                 NumberOfLikes={x.Likes.length}
                                 fetch={fetch}
                                 key={x._id}
-                                imageData = {x.data}
-
-                
+                                imageData={x.data}
                             />
                         </div>
-
                     ))
-
                 }
             </div>
-
         </>
     )
 }

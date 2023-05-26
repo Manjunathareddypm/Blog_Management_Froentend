@@ -36,7 +36,7 @@ export default function SelectSmall(props) {
                             vertical: 'top',
                             horizontal: 'left',
                         },
-                        getContentAnchorEl: null,
+                        getcontentanchorel: null,
                     }}
                 >
 

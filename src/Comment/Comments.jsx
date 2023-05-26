@@ -33,7 +33,7 @@ const initialValue = {
 
 }
 
-const Comments = ({ post, id, postAuthor, initialValueForComments, fetch ,Title}) => {
+const Comments = ({ post, id, postAuthor, initialValueForComments, fetch, Title }) => {
 
     const authorName = useSelector((c) => {
         return c.allBlogReducer.authorName
@@ -73,21 +73,34 @@ const Comments = ({ post, id, postAuthor, initialValueForComments, fetch ,Title}
         });
     }
 
+
+    const throttle = (fn, limit) => {
+        let flag = true;
+        return function(){
+          let context = this;
+          let args = arguments;
+          if(flag){
+            fn.apply(context, args);
+            flag = false;
+            setTimeout(() => {
+              flag=true;
+            }, limit);
+          }
+        }
+      }
+
     const addComment = async () => {
-
-
         if (await comment.Comment.length <= 0) {
             setError(true);
             return;
         }
-
         else {
             const commnet = await postComments(id, authorName, comment);
-            const email = await sendEmailForComment(postAuthor, comment, authorName,Title)
-            setComment(initialValue)
-            setToggle(prev => !prev);
-            initialValueForComments()
             fetch()
+            setComment(initialValue)
+            setToggle(prev => !prev)
+            initialValueForComments()
+            const email = await sendEmailForComment(postAuthor, comment, authorName, Title)
         }
     }
 
@@ -115,7 +128,7 @@ const Comments = ({ post, id, postAuthor, initialValueForComments, fetch ,Title}
             <Box>
                 {
                     <>
-                        {comments && comments.length > 0 && comments.map((comment) => (
+                        {/* {comments && comments.length > 0 && comments.map((comment) => (
                             <>
                                 <Comment key={comment._id} comment={comment} id={id} fetch={fetch} setToggle={setToggle} initialValueForComments={initialValueForComments} />
                                 {parentId && parentId.length > 0 && parentId.map((nestedComment) => (
@@ -128,6 +141,18 @@ const Comments = ({ post, id, postAuthor, initialValueForComments, fetch ,Title}
 
 
                             </>
+                        ))} */}
+                        {comments && comments.length > 0 && comments.map((comment) => (
+                            <React.Fragment key={comment._id}>
+                                <Comment comment={comment} id={id} fetch={fetch} setToggle={setToggle} initialValueForComments={initialValueForComments} />
+                                {parentId && parentId.length > 0 && parentId.map((nestedComment) => (
+                                    nestedComment.CommentParentId === comment._id ? (
+                                        <Comment key={nestedComment._id} comment={nestedComment} type="Nested" fetch={fetch} id={id} setToggle={setToggle} />
+                                    ) : (
+                                        null
+                                    )
+                                ))}
+                            </React.Fragment>
                         ))}
 
 

@@ -1,8 +1,9 @@
 import axios from 'axios'
+const token = localStorage.getItem('token')
 
 let headerConfig = {
     headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        'Authorization': `Bearer ${token}`
     }
 }
 const url = "http://localhost:4000/api/v1/";
