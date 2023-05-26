@@ -16,6 +16,7 @@ function App() {
   const dispatch = useDispatch()
 
   const token = localStorage.getItem('token')
+  
   if (token) {
     dispatch(addTokenToSystem(token))
     dispatch(setAuthenticated(true))
@@ -28,6 +29,7 @@ function App() {
     return c.userReducer.isAuthenticated
   })
 
+
   return (
     <>
       <BrowserRouter>
@@ -37,7 +39,7 @@ function App() {
             (
               <>
                 <Route path='/createPost' element={<CreateBlog />} />
-                <Route path='/createPostEmoji' element={<CreateBlogEmoji />} />
+                <Route path='/createPostEmoji/:id' element={<CreateBlogEmoji />} />
                 <Route path='/dashboard' element={<DashBoard />} />
                 <Route path='/detailView/:id' element={<ViewBlog />} />
                 <Route path='/editBlog/:id' element={<EditBlog />} />

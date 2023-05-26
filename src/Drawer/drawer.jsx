@@ -2,21 +2,14 @@ import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import '../Drawer/drawer.css'
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { ListItemIcon } from '@mui/material';
-import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import { useNavigate } from 'react-router-dom';
-import ColorLensIcon from '@mui/icons-material/ColorLens';
 import likeImage from '../assest/heart.png'
 import dashboardImage from '../assest/dashboard.png'
-import logoutIcon from '../assest/switch.png'
-import { Person2Outlined, Person2Rounded } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { setAuthenticated } from '../redux/Slice/Authentications';
 import { addTokenToSystem } from '../redux/Slice/Authentications';

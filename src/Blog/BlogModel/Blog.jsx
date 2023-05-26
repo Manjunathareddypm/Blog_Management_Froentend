@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Card from '@mui/material/Card';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Button, Typography } from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import App from '../Popper/App';
 import { viewPostService } from '../../Services/blogs.service';
 import './Blog.css'
@@ -22,14 +17,13 @@ import { getEmailOfUser } from '../../Services/blogs.service';
 import { useDispatch } from 'react-redux';
 import { setAuthorName } from '../../redux/Slice/HomeDashboardSlice';
 import { likeButtonService } from '../../Services/blogs.service';
-import chatImage from '../../assest/messenger.png'
 import DateDisplay from '../../Utils/DateDisplay';
 import { findAllComments } from '../../Services/blogs.service';
 import { getReplyToNumber } from "../../Services/blogs.service";
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ModeCommentOutlined from '@mui/icons-material/ModeCommentOutlined';
-import imageDefault from '../../assest/fitnessImage.jpeg'
+
 function Blog(props) {
   const dispatch = useDispatch()
 

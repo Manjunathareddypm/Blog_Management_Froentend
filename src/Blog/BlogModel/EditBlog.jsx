@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import '../CreateBlog/CreateBlog.css'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import image from '../../assest/otherOption.jpg'
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { createPostService } from '../../Services/blogs.service';
 import SelectSmall from '../../Utils/tab';
 import { useNavigate } from 'react-router-dom';
-import { Author } from '../../Pages/LoginPage/Login';
 import Header from '../../Header/Header';
 import { getPostByIdService } from '../../Services/blogs.service';
 import { useParams } from 'react-router-dom'
 import { updatePostService } from '../../Services/blogs.service';
 import { selectTypeOfBlog } from '../../redux/Slice/HomeDashboardSlice';
 import { storage } from '../../firebase';
-
+import { toaster } from '../../Utils/Toaster';
 export default function EditBlog() {
 
     const dispatch = useDispatch()
     const { id } = useParams()
     const navigate = useNavigate()
     const [imageUrl, setImageUrl] = useState(null);
-    const [initialImage, setInitialIamge] = useState()
     const propValue = "Create"
     const titleregex = /^.{3,}$/
     const descRegex = /^[\s\S]{3,}$/;
     const [blog, setBlog] = useState({
-        Title: "", Description: "", Type: "Other", data: ''
+        Title: "", 
+        Description: "", 
+        Type: "Other", 
+        data: ''
     })
 
     const [regex, setRegex] = useState({
@@ -58,8 +57,7 @@ export default function EditBlog() {
         setBlog((prev) => ({
             ...prev, Description: e.target.value
         }))
-        console.log(descRegex.test(blog.Description));
-        console.log(e.target.value);
+        
     }
 
     const handlePhoto = (e) => {
@@ -69,8 +67,6 @@ export default function EditBlog() {
     const onClickPublish = async () => {
         const desTest = await descRegex.test(blog.Description)
         const titleTest = await titleregex.test(blog.Title)
-       
-        console.log(desTest,"DESTEST");
         if (titleTest) {
             setRegex((prev) => ({
                 ...prev, titleError: false, titleHelper: ""
@@ -102,8 +98,9 @@ export default function EditBlog() {
                     const dbCall = async () => {
                         const response = await updatePostService(id, blog, err);
                         if (response) {
+                            toaster("info",response.data.message)
                             dispatch(selectTypeOfBlog("All"))
-                            navigate("/dashboard")
+                            navigate("/dashboard")                          
                         }
                     };
                     dbCall();
@@ -111,8 +108,10 @@ export default function EditBlog() {
         } else if (desTest && titleTest) {
             const response = await updatePostService(id, blog, blog.data)
             if (response) {
+                toaster("info",response.data.message)
                 dispatch(selectTypeOfBlog("All"))
-                navigate("/dashboard")
+                navigate(`/detailView/${id}`)
+               
             }
         }
 
@@ -142,27 +141,11 @@ export default function EditBlog() {
             }))
         }
         fetch()
-
     }, [])
 
-    useEffect(() => {
-        const fetch = async () => {
-           
-            setBlog((prev) => ({
-                ...prev, Title:blog.Title , Description: blog.Description, Type: blog.Type, data: blog.data
-            }))
-        }
-        fetch()
-
-    }, [imageUrl])
-
-
     return (
-
         <>
             <Header propValue={propValue} />
-
-
             <div className="createblog-ui-main">
                 <div style={{ width: '70vw' }} >
                     <div style={{ height: '20%', width: '100%', paddingTop: '2rem' }}>
@@ -229,8 +212,7 @@ export default function EditBlog() {
                         <div>
                             <TextField
                                 placeholder="Write your story..."
-                                multiline
-                                
+                                multiline                  
                                 variant="standard"
                                 required
                                 value={blog.Description}
@@ -238,22 +220,12 @@ export default function EditBlog() {
                                 rows={15}
                                 error={regex.descriptionError}
                                 helperText={regex.descriptionHelper}
-                                style={{ height: '10rem', width: '100%', marginTop: "2rem", border: 'none', outline: 'none', boxShadow: 'none' }}
-                                // InputProps={{
-                                //     style: {
-                                //         outline: "none",
-                                //     },
-                                // }}
+                                style={{ height: '10rem', width: '100%', marginTop: "2rem", border: 'none', outline: 'none', boxShadow: 'none' }}                           
                             />
                         </div>
-
                     </div>
                 </div>
-
-
-
             </div>
-
         </>
     )
 }

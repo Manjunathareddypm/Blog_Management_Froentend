@@ -3,58 +3,26 @@ import imageForBlog from '../../assest/blog12.jpg'
 import '../DashBoard/DashBoard.css'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllBlogs } from '../../redux/Slice/HomeDashboardSlice'
-import Blog from '../../Blog/BlogModel/Blog'
-import { Link } from 'react-router-dom'
 import { Grid } from '@mui/material';
 import NativeSelectDemo from '../../Utils/NativeSelectDemo'
-import { Card, Container } from '@mui/material'
 import { arrangeByLikesSortLowToHigh, getAllBlogsService } from '../../Services/blogs.service'
-import { viewPostService } from '../../Services/blogs.service'
-import { setForSearchType } from '../../redux/Slice/HomeDashboardSlice'
 import { arrangeByLikesSortHighToLowService } from '../../Services/blogs.service'
 import NativeSelectDemo1 from '../../Utils/NativeSelectDemo1'
-import { setrelevanceType } from '../../redux/Slice/HomeDashboardSlice'
-import { addTokenToSystem } from '../../redux/Slice/Authentications'
 import { selectTypeOfBlog } from '../../redux/Slice/HomeDashboardSlice'
 import BlogPost from '../../Blog/BlogM/BlogPost'
 function DashBoard() {
   const dispatch = useDispatch()
-  const token = localStorage.getItem('token')
-
+  const [stateForBlogHome, setstateForBlogHome] = useState([])
+  const [typeValue, setType] = useState("All")
   const valueOfBlogType = useSelector((c) => {
     return c.allBlogReducer.typeOfBlog
   })
-
-  const [stateForBlogHome, setstateForBlogHome] = useState([])
-  const [comments, setComments] = useState()
   const valuOfRelevance = useSelector((c) => {
     return c.allBlogReducer.relevanceType
   })
-
-  const initialValue = async () => {
-    const data = await getAllBlogsService()
-    dispatch(addTokenToSystem(token))
-    setstateForBlogHome(data.data.data)
-    dispatch(setrelevanceType("All"))
-    dispatch(selectTypeOfBlog("All"))
-  }
-
-  const dataForSearch = useSelector((c) => {
-
-    return c.allBlogReducer.forSearchType
-  })
-
-  const [typeValue, setType] = useState("All")
-
   const setValueOfTypeInChild = async (value1) => {
     await setType(value1)
-   
   }
-
-
-
-
 
   const value = async (typeValue) => {
     const data = await getAllBlogsService()
@@ -94,8 +62,8 @@ function DashBoard() {
       await setstateForBlogHome(data1.data.data.filter((x) => x.Type == "Music"))
     } else if (valuOfRelevance == "lowToHigh" && typeValue == "Fitness") {
       await setstateForBlogHome(data1.data.data.filter((x) => x.Type == "Fitness"))
-    } 
-   
+    }
+
     else if (valuOfRelevance == "lowToHigh" && typeValue == "Politics") {
       await setstateForBlogHome(data1.data.data.filter((x) => x.Type == "Politics"))
     }
@@ -110,7 +78,7 @@ function DashBoard() {
     else if (valuOfRelevance == "highToLow" && typeValue == "Other") {
       await setstateForBlogHome(data2.data.data.filter((x) => x.Type == "Other"))
     }
-     //Politics
+    //Politics
     else if (valuOfRelevance == "highToLow" && typeValue == "Music") {
       await setstateForBlogHome(data2.data.data.filter((x) => x.Type == "Music"))
     }
@@ -147,7 +115,7 @@ function DashBoard() {
     else if (valuOfRelevance == "Latest" && typeValue == "Politics") {
       await setstateForBlogHome(data3.filter((x) => x.Type == "Politics"))
     }
- 
+
     else if (valuOfRelevance == "Latest" && typeValue == "Sports") {
       await setstateForBlogHome(data3.filter((x) => x.Type == "Sports"))
     }
@@ -167,30 +135,21 @@ function DashBoard() {
 
   }
 
-
-
-
   useEffect(() => {
     getAllBlogsService()
     value(valueOfBlogType)
   }, [valuOfRelevance, valueOfBlogType])
 
-  useEffect(() => {
-    value()
-    initialValue()
-  }, [token])
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(selectTypeOfBlog("All"))
-  },[])
+  }, [])
 
   return (
     <div className="dashBoardhome">
-
       <Header />
-
       <div className='dashboard-img-blogs'>
-        <img src={imageForBlog} height={'530px'} width={'100%'} />
+        <img src={imageForBlog} height={'330px'} width={'93.85%'} />
       </div>
       <div className='dahsboard-bcgrund-img'>
 
@@ -199,13 +158,12 @@ function DashBoard() {
             <div style={{ display: 'flex' }}>
               <NativeSelectDemo value={value} setValueOfTypeInChild={setValueOfTypeInChild} />
               <NativeSelectDemo1 value={value} setValueOfTypeInChild={setValueOfTypeInChild} />
-
             </div>
-           
             <Grid container spacing={1}>
               {stateForBlogHome.map((x) => (
                 <Grid item key={x._id} xs={12} sm={6} md={4} lg={4}>
                   <BlogPost
+                    key={x._id}
                     obj={x}
                     id={x._id}
                     value={value}
@@ -225,9 +183,7 @@ function DashBoard() {
             </Grid>
           </div>
         </div>
-
       </div>
-
     </div>
   )
 }

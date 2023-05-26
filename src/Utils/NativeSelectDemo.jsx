@@ -6,7 +6,7 @@ import NativeSelect from '@mui/material/NativeSelect';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTypeOfBlog } from '../redux/Slice/HomeDashboardSlice';
-import { selectTypeOfBlogInDashBoard } from '../redux/Slice/HomeDashboardSlice';
+
 export default function NativeSelectDemo(props) {
   const [value, setValue] = useState("All");
   const dispatch = useDispatch()
@@ -27,7 +27,6 @@ export default function NativeSelectDemo(props) {
           Type
         </InputLabel>
         <NativeSelect
-          defaultValue={"All"}
           onChange={onChangeOfValue}
           value={valueFromType}
         >

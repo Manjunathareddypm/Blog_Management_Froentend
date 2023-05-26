@@ -137,7 +137,6 @@ const Comment = ({ comment, setToggle, type, fetch, id, initialValueForComments 
 
         if (type == "Nested") {
             const data2 = await getParticularReplyComment(comment._id)
-            // console.log(data2.data.data[0].NumberOfLikes);
             setNumberOfLikes(data2.data.data[0].NumberOfLikes)
             if (data2.data.data[0].Likes.includes(authorName)) {
                 setCommentLiked(true)
@@ -197,7 +196,7 @@ const Comment = ({ comment, setToggle, type, fetch, id, initialValueForComments 
 
                             <p onClick={onClickReply}><ReplyIcon style={{ color: '#1677ff', marginRight: '0px' }} /></p>
                             {comment.Author === authorName ? <div> <DeleteForeverIcon className='deleteBtnclass' style={{ marginLeft: 17 }} onClick={() => removeComment()} /></div> : <div style={{ width: '47px' }}></div>}
-                            <StyledDate style={{ marginLeft: '740px' }} ><DateDisplay date={comment.createdAt} /></StyledDate>
+                            <StyledDate style={{ marginLeft: '735px' }} ><DateDisplay date={comment.createdAt} /></StyledDate>
                         </CardActions>
                     </Component>
             }

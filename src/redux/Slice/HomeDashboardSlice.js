@@ -1,5 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-const initialState = { allPosts: [], typeOfBlog: 'All', numberOfLikes: 0, numberOfviews: 0, typeOfBlogInDashBoard: 'All', authorName: localStorage.getItem('author'), forSearchType: "Home" ,relevanceType:"All"}
+const initialState = { 
+    allPosts: [], 
+    typeOfBlog: 'All', 
+    numberOfLikes: 0, 
+    numberOfviews: 0, 
+    typeOfBlogInDashBoard: 'All', 
+    authorName: localStorage.getItem('author'), 
+    forSearchType: "Home" ,
+    relevanceType:"All" ,
+    isPublish :false }
+
 const allBlogs = createSlice({
     name: 'all-post-blogs',
     initialState,
@@ -16,20 +26,21 @@ const allBlogs = createSlice({
         },
         selectTypeOfBlogInDashBoard: (state, actions) => {
             state.typeOfBlogInDashBoard = actions.payload
-        }
-        ,
+        },
         setAuthorName: (state, actions) => {
             state.authorName = actions.payload
-        }
-        ,
+        },
         setForSearchType: (state, actions) => {
             state.forSearchType = actions.payload
         },
         setrelevanceType: (state, actions) => {
             state.relevanceType = actions.payload
+        },
+        setIsPublishValue : (state, actions) => {
+            state.isPublish = actions.payload
         }
     }
 })
 
-export const { getAllBlogs, selectTypeOfBlog, getNumberOfLikes, selectTypeOfBlogInDashBoard, setAuthorName, setForSearchType ,setrelevanceType} = allBlogs.actions
+export const { getAllBlogs, selectTypeOfBlog, getNumberOfLikes, selectTypeOfBlogInDashBoard, setAuthorName, setForSearchType ,setrelevanceType ,setIsPublishValue} = allBlogs.actions
 export default allBlogs.reducer
